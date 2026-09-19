@@ -17,7 +17,7 @@ app =  Flask(__name__)
 #Ruta raiz
 @app.route('/')
 def index():
-    return 'Hola Mundo'
+    return 'Hola ING'
 
 
 if __name__ == '__main__':
