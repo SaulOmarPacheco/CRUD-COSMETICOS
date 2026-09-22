@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Productos
+{% endblock %}
+
+{% block content %}
+
+<h2>Lista de productos</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+            <th>Marca</th>
+            <th>Fecha de registro</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for producto in productos %}
+
+        <tr>
+            <td>{{ producto.id_producto }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.descripcion }}</td>
+            <td>${{ producto.precio }}</td>
+            <td>{{ producto.stock }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>{{ producto.marca.nombre }}</td>
+            <td>{{ producto.fecha_registro }}</td>
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="8">
+                No hay productos registrados.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}
