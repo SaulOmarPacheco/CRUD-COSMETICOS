@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -46,16 +46,19 @@ class Producto(db.Model):
     descripcion = db.Column(db.String(255))
     precio = db.Column(db.Numeric(10, 2), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
+
     id_categoria = db.Column(
         db.Integer,
         db.ForeignKey("categorias.id_categoria"),
         nullable=False
     )
+
     id_marca = db.Column(
         db.Integer,
         db.ForeignKey("marcas.id_marca"),
         nullable=False
     )
+
     fecha_registro = db.Column(db.DateTime)
 
     categoria = db.relationship("Categoria")
@@ -67,11 +70,54 @@ class Producto(db.Model):
 # =========================
 @app.route("/")
 def index():
-    productos = Producto.query.order_by(Producto.id_producto).all()
+
+    productos = Producto.query.order_by(
+        Producto.id_producto
+    ).all()
 
     return render_template(
         "index.html",
         productos=productos
+    )
+
+
+# =========================
+# ACTUALIZAR PRODUCTO
+# =========================
+@app.route(
+    "/productos/actualizar/<int:id>",
+    methods=["GET", "POST"]
+)
+def actualizar_producto(id):
+
+    producto = Producto.query.get_or_404(id)
+
+    categorias = Categoria.query.order_by(
+        Categoria.nombre
+    ).all()
+
+    marcas = Marca.query.order_by(
+        Marca.nombre
+    ).all()
+
+    if request.method == "POST":
+
+        producto.nombre = request.form["nombre"]
+        producto.descripcion = request.form["descripcion"]
+        producto.precio = request.form["precio"]
+        producto.stock = request.form["stock"]
+        producto.id_categoria = request.form["id_categoria"]
+        producto.id_marca = request.form["id_marca"]
+
+        db.session.commit()
+
+        return redirect(url_for("index"))
+
+    return render_template(
+        "update_products.html",
+        producto=producto,
+        categorias=categorias,
+        marcas=marcas
     )
 
 
