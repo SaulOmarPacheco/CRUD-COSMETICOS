@@ -9,6 +9,7 @@ Productos
 <h2>Lista de productos</h2>
 
 <table>
+
     <thead>
         <tr>
             <th>ID</th>
@@ -19,6 +20,7 @@ Productos
             <th>Categoría</th>
             <th>Marca</th>
             <th>Fecha de registro</th>
+            <th>Acciones</th>
         </tr>
     </thead>
 
@@ -27,20 +29,48 @@ Productos
         {% for producto in productos %}
 
         <tr>
+
             <td>{{ producto.id_producto }}</td>
+
             <td>{{ producto.nombre }}</td>
+
             <td>{{ producto.descripcion }}</td>
+
             <td>${{ producto.precio }}</td>
+
             <td>{{ producto.stock }}</td>
+
             <td>{{ producto.categoria.nombre }}</td>
+
             <td>{{ producto.marca.nombre }}</td>
+
             <td>{{ producto.fecha_registro }}</td>
+
+            <td>
+
+                <form
+                    action="{{ url_for('eliminar_producto', id=producto.id_producto) }}"
+                    method="POST"
+                    onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-eliminar"
+                    >
+                        Eliminar
+                    </button>
+
+                </form>
+
+            </td>
+
         </tr>
 
         {% else %}
 
         <tr>
-            <td colspan="8">
+            <td colspan="9">
                 No hay productos registrados.
             </td>
         </tr>
@@ -48,6 +78,7 @@ Productos
         {% endfor %}
 
     </tbody>
+
 </table>
 
 {% endblock %}
