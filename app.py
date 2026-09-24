@@ -83,6 +83,15 @@ def index():
 
 
 # =========================
+# ACTUALIZAR PRODUCTO
+# =========================
+@app.route(
+    "/productos/actualizar/<int:id>",
+    methods=["GET", "POST"]
+)
+def actualizar_producto(id):
+
+    producto = Producto.query.get_or_404(id)
 # AGREGAR PRODUCTO
 # =========================
 @app.route("/productos/crear", methods=["GET", "POST"])
@@ -97,6 +106,13 @@ def crear_producto():
     ).all()
 
     if request.method == "POST":
+
+        producto.nombre = request.form["nombre"]
+        producto.descripcion = request.form["descripcion"]
+        producto.precio = request.form["precio"]
+        producto.stock = request.form["stock"]
+        producto.id_categoria = request.form["id_categoria"]
+        producto.id_marca = request.form["id_marca"]
 
         nuevo_producto = Producto(
             nombre=request.form["nombre"],
@@ -113,6 +129,8 @@ def crear_producto():
         return redirect(url_for("index"))
 
     return render_template(
+        "update_products.html",
+        producto=producto,
         "create_products.html",
         categorias=categorias,
         marcas=marcas

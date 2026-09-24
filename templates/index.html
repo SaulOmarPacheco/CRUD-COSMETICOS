@@ -26,6 +26,7 @@ Productos
             <th>Categoría</th>
             <th>Marca</th>
             <th>Fecha de registro</th>
+            <th>Acciones</th>
         </tr>
     </thead>
 
@@ -51,12 +52,21 @@ Productos
 
             <td>{{ producto.fecha_registro }}</td>
 
+            <td>
+                <a
+                    class="btn btn-editar"
+                    href="{{ url_for('actualizar_producto', id=producto.id_producto) }}"
+                >
+                    Editar
+                </a>
+            </td>
+
         </tr>
 
         {% else %}
 
         <tr>
-            <td colspan="8">
+            <td colspan="9">
                 No hay productos registrados.
             </td>
         </tr>

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}
+Actualizar producto
+{% endblock %}
+
+{% block content %}
+
+<h2>Actualizar producto</h2>
+
+<form method="POST">
+
+    <label>Nombre:</label>
+
+    <input
+        type="text"
+        name="nombre"
+        value="{{ producto.nombre }}"
+        required
+    >
+
+
+    <label>Descripción:</label>
+
+    <textarea
+        name="descripcion"
+    >{{ producto.descripcion }}</textarea>
+
+
+    <label>Precio:</label>
+
+    <input
+        type="number"
+        name="precio"
+        step="0.01"
+        min="0"
+        value="{{ producto.precio }}"
+        required
+    >
+
+
+    <label>Stock:</label>
+
+    <input
+        type="number"
+        name="stock"
+        min="0"
+        value="{{ producto.stock }}"
+        required
+    >
+
+
+    <label>Categoría:</label>
+
+    <select name="id_categoria" required>
+
+        {% for categoria in categorias %}
+
+        <option
+            value="{{ categoria.id_categoria }}"
+            {% if categoria.id_categoria == producto.id_categoria %}
+                selected
+            {% endif %}
+        >
+            {{ categoria.nombre }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>Marca:</label>
+
+    <select name="id_marca" required>
+
+        {% for marca in marcas %}
+
+        <option
+            value="{{ marca.id_marca }}"
+            {% if marca.id_marca == producto.id_marca %}
+                selected
+            {% endif %}
+        >
+            {{ marca.nombre }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <button type="submit">
+        Guardar cambios
+    </button>
+
+    <a href="{{ url_for('index') }}">
+        Cancelar
+    </a>
+
+</form>
+
+{% endblock %}
