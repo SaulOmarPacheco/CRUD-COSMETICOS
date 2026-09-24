@@ -1,5 +1,6 @@
+
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -46,16 +47,19 @@ class Producto(db.Model):
     descripcion = db.Column(db.String(255))
     precio = db.Column(db.Numeric(10, 2), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
+
     id_categoria = db.Column(
         db.Integer,
         db.ForeignKey("categorias.id_categoria"),
         nullable=False
     )
+
     id_marca = db.Column(
         db.Integer,
         db.ForeignKey("marcas.id_marca"),
         nullable=False
     )
+
     fecha_registro = db.Column(db.DateTime)
 
     categoria = db.relationship("Categoria")
@@ -67,7 +71,10 @@ class Producto(db.Model):
 # =========================
 @app.route("/")
 def index():
-    productos = Producto.query.order_by(Producto.id_producto).all()
+
+    productos = Producto.query.order_by(
+        Producto.id_producto
+    ).all()
 
     return render_template(
         "index.html",
@@ -75,5 +82,44 @@ def index():
     )
 
 
+# =========================
+# AGREGAR PRODUCTO
+# =========================
+@app.route("/productos/crear", methods=["GET", "POST"])
+def crear_producto():
+
+    categorias = Categoria.query.order_by(
+        Categoria.nombre
+    ).all()
+
+    marcas = Marca.query.order_by(
+        Marca.nombre
+    ).all()
+
+    if request.method == "POST":
+
+        nuevo_producto = Producto(
+            nombre=request.form["nombre"],
+            descripcion=request.form["descripcion"],
+            precio=request.form["precio"],
+            stock=request.form["stock"],
+            id_categoria=request.form["id_categoria"],
+            id_marca=request.form["id_marca"]
+        )
+
+        db.session.add(nuevo_producto)
+        db.session.commit()
+
+        return redirect(url_for("index"))
+
+    return render_template(
+        "create_products.html",
+        categorias=categorias,
+        marcas=marcas
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+    
