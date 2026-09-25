@@ -1,5 +1,7 @@
+
 import os
 from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -96,7 +98,61 @@ def eliminar_producto(id):
     db.session.commit()
 
     return redirect(url_for("index"))
+# ACTUALIZAR PRODUCTO
+# =========================
+@app.route(
+    "/productos/actualizar/<int:id>",
+    methods=["GET", "POST"]
+)
+def actualizar_producto(id):
+
+    producto = Producto.query.get_or_404(id)
+# AGREGAR PRODUCTO
+# =========================
+@app.route("/productos/crear", methods=["GET", "POST"])
+def crear_producto():
+
+    categorias = Categoria.query.order_by(
+        Categoria.nombre
+    ).all()
+
+    marcas = Marca.query.order_by(
+        Marca.nombre
+    ).all()
+
+    if request.method == "POST":
+
+        producto.nombre = request.form["nombre"]
+        producto.descripcion = request.form["descripcion"]
+        producto.precio = request.form["precio"]
+        producto.stock = request.form["stock"]
+        producto.id_categoria = request.form["id_categoria"]
+        producto.id_marca = request.form["id_marca"]
+
+        nuevo_producto = Producto(
+            nombre=request.form["nombre"],
+            descripcion=request.form["descripcion"],
+            precio=request.form["precio"],
+            stock=request.form["stock"],
+            id_categoria=request.form["id_categoria"],
+            id_marca=request.form["id_marca"]
+        )
+
+        db.session.add(nuevo_producto)
+        db.session.commit()
+
+        return redirect(url_for("index"))
+
+    return render_template(
+        "update_products.html",
+        producto=producto,
+        "create_products.html",
+        categorias=categorias,
+        marcas=marcas
+    )
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    

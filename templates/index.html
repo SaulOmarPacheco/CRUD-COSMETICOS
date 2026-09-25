@@ -8,6 +8,12 @@ Productos
 
 <h2>Lista de productos</h2>
 
+<a href="{{ url_for('crear_producto') }}" class="btn-agregar">
+    + Agregar producto
+</a>
+
+<br><br>
+
 <table>
 
     <thead>
@@ -63,6 +69,12 @@ Productos
 
                 </form>
 
+                <a
+                    class="btn btn-editar"
+                    href="{{ url_for('actualizar_producto', id=producto.id_producto) }}"
+                >
+                    Editar
+                </a>
             </td>
 
         </tr>

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}
+Agregar producto
+{% endblock %}
+
+{% block content %}
+
+<h2>Agregar producto</h2>
+
+<form method="POST">
+
+    <label>Nombre:</label>
+
+    <input
+        type="text"
+        name="nombre"
+        placeholder="Nombre del producto"
+        required
+    >
+
+
+    <label>Descripción:</label>
+
+    <textarea
+        name="descripcion"
+        placeholder="Descripción del producto"
+    ></textarea>
+
+
+    <label>Precio:</label>
+
+    <input
+        type="number"
+        name="precio"
+        step="0.01"
+        min="0"
+        placeholder="0.00"
+        required
+    >
+
+
+    <label>Stock:</label>
+
+    <input
+        type="number"
+        name="stock"
+        min="0"
+        placeholder="0"
+        required
+    >
+
+
+    <label>Categoría:</label>
+
+    <select name="id_categoria" required>
+
+        <option value="">
+            Selecciona una categoría
+        </option>
+
+        {% for categoria in categorias %}
+
+        <option value="{{ categoria.id_categoria }}">
+            {{ categoria.nombre }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>Marca:</label>
+
+    <select name="id_marca" required>
+
+        <option value="">
+            Selecciona una marca
+        </option>
+
+        {% for marca in marcas %}
+
+        <option value="{{ marca.id_marca }}">
+            {{ marca.nombre }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <br><br>
+
+    <button type="submit">
+        Guardar producto
+    </button>
+
+    <a href="{{ url_for('index') }}">
+        Cancelar
+    </a>
+
+</form>
+
+{% endblock %}
