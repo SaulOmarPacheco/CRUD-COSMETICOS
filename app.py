@@ -1,6 +1,4 @@
-
 import os
-from flask import Flask, render_template, redirect, url_for
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -84,20 +82,43 @@ def index():
 
 
 # =========================
-# ELIMINAR PRODUCTO
+# AGREGAR PRODUCTO
 # =========================
-@app.route(
-    "/productos/eliminar/<int:id>",
-    methods=["POST"]
-)
-def eliminar_producto(id):
+@app.route("/productos/crear", methods=["GET", "POST"])
+def crear_producto():
 
-    producto = Producto.query.get_or_404(id)
+    categorias = Categoria.query.order_by(
+        Categoria.nombre
+    ).all()
 
-    db.session.delete(producto)
-    db.session.commit()
+    marcas = Marca.query.order_by(
+        Marca.nombre
+    ).all()
 
-    return redirect(url_for("index"))
+    if request.method == "POST":
+
+        nuevo_producto = Producto(
+            nombre=request.form["nombre"],
+            descripcion=request.form["descripcion"],
+            precio=request.form["precio"],
+            stock=request.form["stock"],
+            id_categoria=request.form["id_categoria"],
+            id_marca=request.form["id_marca"]
+        )
+
+        db.session.add(nuevo_producto)
+        db.session.commit()
+
+        return redirect(url_for("index"))
+
+    return render_template(
+        "create_products.html",
+        categorias=categorias,
+        marcas=marcas
+    )
+
+
+# =========================
 # ACTUALIZAR PRODUCTO
 # =========================
 @app.route(
@@ -107,10 +128,6 @@ def eliminar_producto(id):
 def actualizar_producto(id):
 
     producto = Producto.query.get_or_404(id)
-# AGREGAR PRODUCTO
-# =========================
-@app.route("/productos/crear", methods=["GET", "POST"])
-def crear_producto():
 
     categorias = Categoria.query.order_by(
         Categoria.nombre
@@ -129,16 +146,6 @@ def crear_producto():
         producto.id_categoria = request.form["id_categoria"]
         producto.id_marca = request.form["id_marca"]
 
-        nuevo_producto = Producto(
-            nombre=request.form["nombre"],
-            descripcion=request.form["descripcion"],
-            precio=request.form["precio"],
-            stock=request.form["stock"],
-            id_categoria=request.form["id_categoria"],
-            id_marca=request.form["id_marca"]
-        )
-
-        db.session.add(nuevo_producto)
         db.session.commit()
 
         return redirect(url_for("index"))
@@ -146,13 +153,30 @@ def crear_producto():
     return render_template(
         "update_products.html",
         producto=producto,
-        "create_products.html",
         categorias=categorias,
         marcas=marcas
     )
 
 
+# =========================
+# ELIMINAR PRODUCTO
+# =========================
+@app.route(
+    "/productos/eliminar/<int:id>",
+    methods=["POST"]
+)
+def eliminar_producto(id):
+
+    producto = Producto.query.get_or_404(id)
+
+    db.session.delete(producto)
+    db.session.commit()
+
+    return redirect(url_for("index"))
+
+
+# =========================
+# EJECUTAR APLICACION
+# =========================
 if __name__ == "__main__":
     app.run(debug=True)
-
-    
