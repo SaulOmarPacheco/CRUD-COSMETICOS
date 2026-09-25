@@ -1,5 +1,6 @@
 
 import os
+from flask import Flask, render_template, redirect, url_for
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -83,6 +84,20 @@ def index():
 
 
 # =========================
+# ELIMINAR PRODUCTO
+# =========================
+@app.route(
+    "/productos/eliminar/<int:id>",
+    methods=["POST"]
+)
+def eliminar_producto(id):
+
+    producto = Producto.query.get_or_404(id)
+
+    db.session.delete(producto)
+    db.session.commit()
+
+    return redirect(url_for("index"))
 # ACTUALIZAR PRODUCTO
 # =========================
 @app.route(

@@ -53,6 +53,22 @@ Productos
             <td>{{ producto.fecha_registro }}</td>
 
             <td>
+
+                <form
+                    action="{{ url_for('eliminar_producto', id=producto.id_producto) }}"
+                    method="POST"
+                    onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-eliminar"
+                    >
+                        Eliminar
+                    </button>
+
+                </form>
+
                 <a
                     class="btn btn-editar"
                     href="{{ url_for('actualizar_producto', id=producto.id_producto) }}"
